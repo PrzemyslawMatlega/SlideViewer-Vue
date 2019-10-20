@@ -1,12 +1,23 @@
 <template>
     <div class="nav">
         <div class="nav__logo">SlideViewer</div>
-        <div class="nav__menulink">Settings</div>
+        <!-- <div class="nav__menulink">Settings</div> -->
+
+        <div class="nav__iconBox nav__iconBox--1" @click="switchPopup">
+            <img class="nav__icon" src="../assets/img/upload.svg" alt="">
+        </div>
+        <div class="nav__iconBox">
+            <img class="nav__icon" src="../assets/img/settings.svg" alt="">
+        </div>
     </div>
 </template>
 <script>
 export default {
-    
+    methods:{
+        switchPopup(){
+            this.$emit('switchPopup')
+        }
+    }
 }
 </script>
 
@@ -45,6 +56,20 @@ export default {
                 background: 	#aaa5a5;
             }
             
+        }
+        &__iconBox{
+            margin: 0 1rem;
+            cursor: pointer;
+
+            &--1{
+                padding-bottom: .2rem;
+            }
+        }
+
+        &__icon{
+            width: 4rem;
+            height: 4rem;
+
         }
     }
 </style>
