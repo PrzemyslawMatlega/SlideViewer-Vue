@@ -1,10 +1,13 @@
 <template>
   <div id="app">
-    <TheNavbar @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
+    <TheNavbar
+    @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
 
     <transition name="fade">
 
-      <TheUploadPopup v-if="isUploadPopupOn" @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
+      <TheUploadPopup 
+      v-if="isUploadPopupOn"
+      @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
 
     </transition>
 
