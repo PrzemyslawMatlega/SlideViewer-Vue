@@ -5,12 +5,31 @@
       <div class="uploadPopup__close" @click="$emit('switchPopup')">
         <img src="../assets/img/close.svg" alt="">
       </div>
-      <form class="uploadForm" enctype="multipart/form-data">>
+
+      <form class="uploadForm" enctype="multipart/form-data">
         <div class="uploadForm__fileName"><span>File Name:</span> {{fileName}}</div>
-        <label for="uploadedFile" class="uploadForm__label"> Choose a file...</label>
+
+        <label for="uploadedFile" class="uploadForm__label"  
+        :class="{ buttonInactive : submitInactive }"> Choose a file...</label>
+
         <input type="file" name="uploadedFile" id="uploadedFile" class="uploadForm__input" accept="image/*"
-          @change="showFileName">
-        <button type="submit" class="uploadForm__button" @click.prevent="uploadPickedFile">Upload!</button>
+          @change="showFileName" :disabled ="submitInactive">
+
+        <button type="submit" class="uploadForm__button" 
+        :class="{ buttonInactive : submitInactive }"
+        @click.prevent="uploadPickedFile"
+        :disabled ="submitInactive" >Upload!</button>
+
+        <div class="uploadForm__status" 
+        :class="fileStatusClass">
+
+          <transition name="fade" mode="out-in">
+            <span :key="fileStatus">
+              {{fileStatusComp}}
+            </span>
+          </transition>
+
+        </div>
 
       </form>
 
@@ -20,29 +39,73 @@
 
 <script>
   import firebase from '../myFireBase.js'
-  
+
   export default {
     data() {
       return {
         fileName: 'File Name',
-        fileToUpload : Object,
-        
+        fileToUpload: false,
+        fileStatus: '',
+        fileStatusClass: '',
+        submitInactive: false,
+
       }
     },
     methods: {
       showFileName(event) {
         this.fileName = event.target.value.split(/[\\\/]/g).pop();
         this.fileToUpload = event.target.files[0]
-        
+
       },
       uploadPickedFile() {
-        const uploadFirebase = firebase.storage().ref(`slide_viwer_imgs/${this.fileToUpload.name}`)
-        uploadFirebase.put(this.fileToUpload)
-        .then( (snapshot) => {
-          console.log( snapshot)
-        })
-      } 
+
+        if (this.fileToUpload) {
+          const uploadFirebase = firebase.storage().ref(`slide_viewer_imgs/${this.fileToUpload.name}`)
+          const uploadTask = uploadFirebase.put(this.fileToUpload)
+          const that = this;
+
+          uploadTask.on('state_changed',
+
+            function progress(snapshot) {
+              console.log(snapshot)
+
+              that.fileStatus = 'uploading'
+            },
+            function error(err) {
+              console.log('error')
+              that.fileStatus = 'error'
+            },
+            function complete() {
+              that.fileStatus = 'uploaded'
+            }
+          )
+
+        } else {
+          this.fileStatus = 'notPicked'
+        }
+
+      }
     },
+    computed: {
+      fileStatusComp() {
+        switch (this.fileStatus) {
+          case 'notPicked':
+            this.fileStatusClass = 'uploadForm__status--notPicked'
+            return 'Please pick a file...'
+          case 'uploading':
+            this.fileStatusClass = 'uploadForm__status--uploading'
+            this.submitInactive = true
+            return 'File is uploading...'
+          case 'uploaded':
+            this.submitInactive = false
+            this.fileStatusClass = 'uploadForm__status--uploaded'
+            return 'File has been uploaded!'
+          case 'error':
+            this.fileStatusClass = 'uploadForm__status--error'
+            return 'Something wents wrong :('
+        }
+      }
+    }
   }
 
 </script>
@@ -65,7 +128,6 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-
       width: 70rem;
       height: 35rem;
       background: #fff;
@@ -121,17 +183,53 @@
       }
 
       &__input {
-
         width: 0.1px;
         height: 0.1px;
         opacity: 0;
         overflow: hidden;
         position: absolute;
         z-index: -1;
-
       }
+
+      &__status {
+        flex-basis: 100%;
+        position: relative;
+        bottom: -4rem;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        min-height: 2.2rem;
+
+        &--notPicked {
+          color: rgb(255, 145, 0);
+        }
+
+        &--uploading {
+          color: rgb(30, 139, 202);
+        }
+
+        &--error {
+          color: rgb(199, 39, 39);
+        }
+
+        &--uploaded {
+          color: rgb(25, 206, 25);
+        }
+      }
+
+      .buttonInactive {
+        background: rgba(195, 195, 195, 0.643);
+        border: 1px solid rgba(195, 195, 195, 0.643);
+
+        &:hover {
+          background: rgba(95, 95, 95, 0.643);
+           border: 1px solid rgba(95, 95, 95, 0.643);
+        }
+      }
+
     }
   }
+
 
   %buttonStyle {
     display: block;
@@ -148,6 +246,16 @@
       border: 2px solid #39a80d;
       background: #39a80d;
 
+    }
+  }
+
+  @keyframes statusAnimation {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
     }
   }
 
