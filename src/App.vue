@@ -1,15 +1,14 @@
 <template>
   <div id="app">
-    <TheNavbar
-    @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
+    <TheNavbar @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
 
     <transition name="fade">
-
       <TheUploadPopup 
       v-if="isUploadPopupOn"
       @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
-
     </transition>
+
+    <TheViewer/>
 
   </div>
 </template>
@@ -17,6 +16,7 @@
 <script>
   import TheNavbar from './components/TheNavbar';
   import TheUploadPopup from './components/TheUploadPopup';
+  import TheViewer from './components/Viewer/TheViewer'
 
   export default {
     name: 'app',
@@ -27,7 +27,8 @@
     },
     components: {
       TheNavbar,
-      TheUploadPopup
+      TheUploadPopup,
+      TheViewer
     }
   }
 

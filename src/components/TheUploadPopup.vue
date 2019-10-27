@@ -111,6 +111,7 @@
 </script>
 
 <style lang="scss">
+
   .uploadPopup {
     display: flex;
     justify-content: center;
