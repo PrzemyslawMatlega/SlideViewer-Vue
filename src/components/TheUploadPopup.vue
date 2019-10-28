@@ -61,7 +61,7 @@
 
         if (this.fileToUpload) {
           const uploadFirebase = firebase.storage().ref(`slide_viewer_imgs/${this.fileToUpload.name}`)
-          const uploadTask = uploadFirebase.put(this.fileToUpload)
+          const uploadTask = uploadFirebase.put(this.fileToUpload);
           const that = this;
 
           uploadTask.on('state_changed',

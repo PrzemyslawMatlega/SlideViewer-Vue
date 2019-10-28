@@ -10,7 +10,7 @@
     data() {
       return {
         storageRef: Function,
-        imgsList: [],
+        imgsListToCompare: [],
 
       }
     },
@@ -18,11 +18,9 @@
       getAllImages() {
 
         const listRef = this.storageRef.child('slide_viewer_imgs/1.jpg');
+
         listRef.getDownloadURL().then(function (url) {
-          console.log(url);
         }).catch(function (error) {
-
-
           switch (error.code) {
             case 'storage/object-not-found':
               break;
@@ -38,29 +36,40 @@
           }
         });
       },
+
       getImgList() {
         const listRef = this.storageRef.child('slide_viewer_imgs');
-        const that = this;
+        const vm = this;
 
         listRef.listAll().then(function (res) {
-          res.prefixes.forEach(function (folderRef) {
-            //   console.log(folderRef)
-          });
           res.items.forEach(function (itemRef) {
-           that.imgsList.push(itemRef.location.path)
-           console.log(that.imgsList);
+            console.log(itemRef);
+
+            vm.checkForNewImgs(itemRef)
           });
         }).catch(function (error) {
-          // Uh-oh, an error occurred!
           console.log(error)
         });
 
-
       },
+      checkForNewImgs(currentItem){
+          // For a new and old value in watcher           
+            if(!this.imgsListToCompare.includes(currentItem.location.path)){
+              // const copiedArray = this.imgsListToCompare.slice();
+              copiedArray.push(currentItem.location.path);
+              // this.imgsListToCompare = copiedArray;
+            }
+      },
+      
     },
-      created() {
-        this.storageRef = firebase.storage().ref();
-      }
+    watch:{
+      // imgsListToCompare(newList, oldList){
+      //     console.log('new List -', newList , 'Old list', oldList);
+      // }
+    },
+    created() {
+      this.storageRef = firebase.storage().ref();
     }
+  }
 
 </script>

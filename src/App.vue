@@ -7,9 +7,9 @@
       v-if="isUploadPopupOn"
       @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
     </transition>
-
+  <keep-alive>
     <TheViewer/>
-
+  </keep-alive>
   </div>
 </template>
 
