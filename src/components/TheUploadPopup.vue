@@ -9,19 +9,16 @@
       <form class="uploadForm" enctype="multipart/form-data">
         <div class="uploadForm__fileName"><span>File Name:</span> {{fileName}}</div>
 
-        <label for="uploadedFile" class="uploadForm__label"  
-        :class="{ buttonInactive : submitInactive }"> Choose a file...</label>
+        <label for="uploadedFile" class="uploadForm__label" :class="{ buttonInactive : submitInactive }"> Choose a
+          file...</label>
 
         <input type="file" name="uploadedFile" id="uploadedFile" class="uploadForm__input" accept="image/*"
-          @change="showFileName" :disabled ="submitInactive">
+          @change="showFileName" :disabled="submitInactive">
 
-        <button type="submit" class="uploadForm__button" 
-        :class="{ buttonInactive : submitInactive }"
-        @click.prevent="uploadPickedFile"
-        :disabled ="submitInactive" >Upload!</button>
+        <button type="submit" class="uploadForm__button" :class="{ buttonInactive : submitInactive }"
+          @click.prevent="uploadPickedFile" :disabled="submitInactive">Upload!</button>
 
-        <div class="uploadForm__status" 
-        :class="fileStatusClass">
+        <div class="uploadForm__status" :class="fileStatusClass">
 
           <transition name="fade" mode="out-in">
             <span :key="fileStatus">
@@ -55,28 +52,39 @@
       showFileName(event) {
         this.fileName = event.target.value.split(/[\\\/]/g).pop();
         this.fileToUpload = event.target.files[0]
+      },
+      uploadList(uniqueId) {
+        this.$http.post('https://slideviewer-fd03d.firebaseio.com/imgList.json', {ID: uniqueId} )
+          .then(response =>{
+            console.log(response);
+
+          },error =>{
+            console.log(error);
+          })
 
       },
       uploadPickedFile() {
 
         if (this.fileToUpload) {
-          const uploadFirebase = firebase.storage().ref(`slide_viewer_imgs/${this.fileToUpload.name}`)
+
+          let uniqueId = '_' + Math.random().toString(36).substr(2, 9);
+          const uploadFirebase = firebase.storage().ref(`slide_viewer_imgs/${uniqueId}`)
           const uploadTask = uploadFirebase.put(this.fileToUpload);
-          const that = this;
+          const vm = this;
 
           uploadTask.on('state_changed',
 
             function progress(snapshot) {
               console.log(snapshot)
-
-              that.fileStatus = 'uploading'
+              vm.fileStatus = 'uploading'
             },
             function error(err) {
               console.log('error')
-              that.fileStatus = 'error'
+              vm.fileStatus = 'error'
             },
             function complete() {
-              that.fileStatus = 'uploaded'
+              vm.fileStatus = 'uploaded'
+              vm.uploadList(uniqueId)
             }
           )
 
@@ -84,7 +92,8 @@
           this.fileStatus = 'notPicked'
         }
 
-      }
+      },
+
     },
     computed: {
       fileStatusComp() {
@@ -111,7 +120,6 @@
 </script>
 
 <style lang="scss">
-
   .uploadPopup {
     display: flex;
     justify-content: center;
@@ -224,7 +232,7 @@
 
         &:hover {
           background: rgba(95, 95, 95, 0.643);
-           border: 1px solid rgba(95, 95, 95, 0.643);
+          border: 1px solid rgba(95, 95, 95, 0.643);
         }
       }
 
