@@ -9,14 +9,16 @@
       <form class="uploadForm" enctype="multipart/form-data">
         <div class="uploadForm__fileName"><span>File Name:</span> {{fileName}}</div>
 
-        <label for="uploadedFile" class="uploadForm__label" :class="{ buttonInactive : submitInactive }"> Choose a
-          file...</label>
+        <label for="uploadedFile" class="uploadForm__label" 
+        :class="{ buttonInactive : submitInactive }"> Choose a file...</label>
 
         <input type="file" name="uploadedFile" id="uploadedFile" class="uploadForm__input" accept="image/*"
           @change="showFileName" :disabled="submitInactive">
 
-        <button type="submit" class="uploadForm__button" :class="{ buttonInactive : submitInactive }"
-          @click.prevent="uploadPickedFile" :disabled="submitInactive">Upload!</button>
+        <button type="submit" class="uploadForm__button" 
+        :class="{ buttonInactive : submitInactive }"
+          @click.prevent="uploadPickedFile" :disabled="submitInactive">
+          Upload!</button>
 
         <div class="uploadForm__status" :class="fileStatusClass">
 
