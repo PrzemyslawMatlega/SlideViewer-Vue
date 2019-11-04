@@ -1,15 +1,12 @@
 <template>
   <div>
-    <div class="click" @click="getImagesList"> CLICK ME</div>
+    <div class="click" @click="getPostsList"> CLICK ME</div>
     <div class="viewerGrid">
-      <TheViewerPost 
-      v-for="(single) in images" :key="single.name" 
-      :url="single.url"
-       @click.native="renderPopup(single)"/>
+      <TheViewerPost v-for="(single, index) in allPosts" :key="single.name" :url="single.url"
+        @click.native="renderPopup(single, index)" />
     </div>
-    <template v-if="showPoupup">
-      <TheViewerPopup />
-   
+    <template v-if="showPopup">
+      <TheViewerPopup :currentPost="currentPost[0]"  @closePopup="showPopup  = !showPopup"/>
     </template>
   </div>
 </template>
@@ -22,52 +19,80 @@
     data() {
       return {
         storageRef: Function,
-        showPoupup: false,
-        imagesList: [],
-        images: [],
-        
+        showPopup: false,
+        currentPost: [],
+        allPosts: [],
+        allPostsIndex: [],
+        incomingPosts: [],
+
+
       }
     },
     methods: {
-      getImage(name) {
-        
-        const listRef = this.storageRef.child('slide_viewer_imgs/'+ name);
-        listRef.getDownloadURL().then( url => this.images.push({name, url}))
-        .catch( error => {
-          switch (error.code) {
-            case 'storage/object-not-found':
-              break;
+      getImage(newPosts) {
+        newPosts.forEach(singlePost => {
+          this.allPostsIndex.push(singlePost);
 
-            case 'storage/unauthorized':
-              break;
+          const listRef = this.storageRef.child('slide_viewer_imgs/' + singlePost);
+          listRef.getDownloadURL().then(url => this.allPosts.push({
+              name : singlePost,
+              url: url,
+            }))
+            .catch(error => {
+              switch (error.code) {
+                case 'storage/object-not-found':
+                  break;
 
-            case 'storage/canceled':
-              break;
+                case 'storage/unauthorized':
+                  break;
 
-            case 'storage/unknown':
-              break;
-          }
-        });
+                case 'storage/canceled':
+                  break;
+
+                case 'storage/unknown':
+                  break;
+              }
+            });
+        })
       },
-      getImagesList() {
+      checkForUpdates() {
+        // Check for new posts
+        let newPosts = this.incomingPosts.filter(incomingPost => !this.allPostsIndex.includes(incomingPost))
+        // this.allPosts.push(...newPosts);
+        this.getImage(newPosts)
+
+
+        // Check for deleted posts 
+        let deletedPosts = this.allPosts.filter(deletedPost => !this.incomingPosts.includes(deletedPost))
+        //to do    
+
+        this.incomingPosts = []
+        console.log(this.incomingPosts);
+      },
+      getPostsList() {
         this.$http.get('https://slideviewer-fd03d.firebaseio.com/imgList.json')
           .then(response => {
             return response.json();
           }).then(data => {
 
-            this.imagesList = data;
+            // this.imagesList = data;
             const dataKeys = Object.keys(data);
 
-            dataKeys.forEach(key =>{
-               this.getImage(data[key].ID)
+            dataKeys.forEach(key => {
+              this.incomingPosts.push(data[key].ID)
+              //  this.getImage(data[key].ID)
             })
 
           }, error => {
             console.log(error)
-          })
+          }).then(() => this.checkForUpdates())
       },
-      renderPopup(singlePost){
-        console.log(singlePost)
+
+      renderPopup(singlePost, currentIndex) {
+        console.log(singlePost, currentIndex);
+        this.currentPost=[],
+        this.currentPost.push(singlePost, currentIndex)
+        this.showPopup = true;
       }
 
 
@@ -104,7 +129,7 @@
     created() {
       this.storageRef = firebase.storage().ref();
     },
-    components:{
+    components: {
       TheViewerPost,
       TheViewerPopup,
     }
