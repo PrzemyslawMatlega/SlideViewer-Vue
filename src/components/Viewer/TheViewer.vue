@@ -2,12 +2,15 @@
   <div>
     <div class="click" @click="getPostsList"> CLICK ME</div>
     <div class="viewerGrid">
+      
       <TheViewerPost v-for="(single, index) in allPosts" :key="single.name" :url="single.url"
         @click.native="renderPopup(single, index)" />
     </div>
+      <transition name="fade">
     <template v-if="showPopup">
       <TheViewerPopup :currentPost="currentPost[0]"  @closePopup="showPopup  = !showPopup"/>
     </template>
+     </transition>
   </div>
 </template>
 <script>
@@ -136,3 +139,17 @@
   }
 
 </script>
+
+
+<style lang="scss">
+    .viewerGrid{
+      width: 70%;
+      margin: 5rem auto;
+      display: grid;
+      grid-template-columns: repeat(3, 30rem);
+      grid-auto-rows: 30rem;
+      grid-column-gap: 4rem;
+      grid-row-gap: 4rem;
+
+    }
+</style>
