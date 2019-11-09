@@ -1,28 +1,38 @@
 <template>
   <div class="viewerPopup">
+    <div v-if="!(currentIndex =='First')" 
+    class="viewerPopup__arrow viewerPopup__arrow--left"
+     @click="$emit('changeSlide', -1)" >
+     &lsaquo;</div>
 
-    
-    <div class="viewerPopup__wrapper">
+   <transition name="fade" mode="out-in" :key="currentPost.name">
+
+    <div class="viewerPopup__wrapper" >
       <div class="viewerPopup__img">
         <img :src="currentPost.url" alt="">
-
       </div>
       <div class="content">
-        <div class="content__close"  @click="$emit('closePopup')">
-                  <img src="../../assets/img/close.svg" alt="">
+        <div class="content__close" @click="$emit('closePopup')">
+          <img src="../../assets/img/close.svg" alt="">
         </div>
       </div>
-
     </div>
+
+   </transition>
+    
+    <div v-if="!(currentIndex =='Last')"
+    class="viewerPopup__arrow viewerPopup__arrow--right" 
+    @click="$emit('changeSlide', 1)">
+    &rsaquo;</div>
   </div>
+
 </template>
 <script>
   export default {
     props: {
       currentPost: Object,
-    }
-
-
+      currentIndex: String,
+    },
   }
 
 </script>
@@ -49,7 +59,6 @@
 
       .content {
         display: flex;
-        
         flex-direction: column;
         justify-content: flex-start;
         width: 40%;
@@ -76,7 +85,19 @@
         object-fit: contain;
       }
     }
+    
+    &__arrow{
+      font-size: 15rem;
+      padding: 4rem;
+      color: rgba(255, 255, 255, 0.349);
+      transition: 0.5s all ease;
+      cursor: pointer;
 
+      &:hover{
+          color: rgba(255, 255, 255, 0.991);
+      }
+
+    }
     &__img {
       background: rgba(0, 0, 0, 0.733);
       width: 60%;
