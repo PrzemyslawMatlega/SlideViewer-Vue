@@ -7,20 +7,25 @@
       </div>
 
       <form class="uploadForm" enctype="multipart/form-data">
-        <div class="uploadForm__fileName"><span>File Name:</span> {{fileName}}</div>
+        <div class="uploadForm__fileName">
+          <span>File Name:</span> {{fileName}}
+        </div>
 
         <label for="uploadedFile" class="uploadForm__label" 
-        :class="{ buttonInactive : submitInactive }"> Choose a file...</label>
+          :class="{ buttonInactive : submitInactive }"> Choose a file...</label>
 
         <input type="file" name="uploadedFile" id="uploadedFile" class="uploadForm__input" accept="image/*"
-          @change="showFileName" :disabled="submitInactive">
+          @change="showFileName" 
+          :disabled="submitInactive">
 
         <button type="submit" class="uploadForm__button" 
-        :class="{ buttonInactive : submitInactive }"
-          @click.prevent="uploadPickedFile" :disabled="submitInactive">
+          :class="{ buttonInactive : submitInactive }"
+          @click.prevent="uploadPickedFile" 
+          :disabled="submitInactive">
           Upload!</button>
 
-        <div class="uploadForm__status" :class="fileStatusClass">
+        <div class="uploadForm__status" 
+          :class="fileStatusClass">
 
           <transition name="fade" mode="out-in">
             <span :key="fileStatus">
@@ -56,7 +61,7 @@
         this.fileToUpload = event.target.files[0]
       },
       uploadList(uniqueId) {
-        this.$http.post('https://slideviewer-fd03d.firebaseio.com/imgList.json', {ID: uniqueId} )
+        this.$http.post('https://slideviewer-fd03d.firebaseio.com/imgList/1.json', {ID: uniqueId} )
           .then(response =>{
             console.log(response);
 
