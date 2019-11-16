@@ -61,14 +61,10 @@
         this.fileToUpload = event.target.files[0]
       },
       uploadList(uniqueId) {
-        this.$http.post('https://slideviewer-fd03d.firebaseio.com/imgList/1.json', {ID: uniqueId} )
-          .then(response =>{
-            console.log(response);
-
-          },error =>{
-            console.log(error);
-          })
-
+          firebase.database().ref(`posts/${uniqueId}`).set({
+              imgName: uniqueId,
+              author: 'xyz',
+          }, (error) => console.log(error));
       },
       uploadPickedFile() {
 

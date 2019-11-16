@@ -23,6 +23,9 @@
   import firebase from '../../myFireBase.js'
   import TheViewerPost from './TheViewerPost'
   import TheViewerPopup from './TheViewerPopup'
+  import {
+    error
+  } from 'util'
 
   export default {
     data() {
@@ -37,16 +40,45 @@
     },
     methods: {
       delateCurentPost() {
+    
         //1. Delate post from list on database
-        this.$http.delete('https://slideviewer-fd03d.firebaseio.com/imgList' + this.allPosts[this.currentIndex].name )
-          .then(response => {
-            console.log(response);
+        const postToDelete = this.allPosts[this.currentIndex].name;
+        firebase.database().ref(`/posts/${postToDelete}`).remove()
 
-          }, error => {
-            console.log(error);
-          })
         //2. Delete img from storage
+        this.storageRef.child(`slide_viewer_imgs/${postToDelete}`).delete().then().catch(error => console.log(error))
+      
         //3. Delete from current view and change for next
+
+        this.showPopup = false;
+        this.allPosts.splice(this.currentIndex, 1)
+
+        if(this.allPosts.length >0){
+
+          if(this.currentIndex != 0){
+            this.currentIndex = this.currentIndex -1 
+          }
+          this.showPopup = true;
+        }
+
+        // if(this.allPosts.length == 1){
+        //   this.showPopup = false;
+        //   this.allPosts.splice(this.currentIndex, 1)
+        // }
+        // else{
+        //   if(this.currentIndex == 0){
+       
+        //       this.showPopup = false;
+        //       this.allPosts.splice((this.currentIndex), 1)
+        //       this.showPopup = true;
+ 
+        //   }
+        //   else{
+        //     this.currentIndex = this.currentIndex - 1;
+        //     this.allPosts.splice((this.currentIndex+1), 1)
+        //   }
+        // }
+        
         //3.1 Close popup if last in array
         //4. checkForUpdates() and refresh grid 
 
@@ -80,7 +112,7 @@
       },
       checkForUpdates() {
         // Check for new posts
-        console.log(this.allPosts)
+     
         let newPosts = this.incomingPosts.filter(incomingPost => !this.allPostsNameList.includes(incomingPost))
         this.getImage(newPosts)
 
@@ -89,20 +121,16 @@
         //to do    
 
         this.incomingPosts = []
-        console.log(this.incomingPosts);
+
       },
       getPostsList() {
-        this.$http.get('https://slideviewer-fd03d.firebaseio.com/imgList.json')
-          .then(response => {
-            return response.json();
-          }).then(data => {
-            const dataKeys = Object.keys(data);
-            dataKeys.forEach(key => {
-              this.incomingPosts.push(data[key].ID)
-            })
-          }, error => {
-            console.log(error)
-          }).then(() => this.checkForUpdates())
+
+        firebase.database().ref('/posts/').once('value').then((snapshot) => {
+          const postsListFromDB = Object.keys(snapshot.val())
+          postsListFromDB.forEach(single => this.incomingPosts.push(single))
+          this.checkForUpdates();
+        }, (error) => console.log(error))
+
       },
 
     },
