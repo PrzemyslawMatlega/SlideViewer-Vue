@@ -1,11 +1,14 @@
 <template>
     <div class="nav">
         <div class="nav__logo">SlideViewer</div>
-        <!-- <div class="nav__menulink">Settings</div> -->
 
-        <div class="nav__iconBox nav__iconBox--1" @click="switchPopup">
-            <img class="nav__icon" src="../assets/img/upload.svg" alt="">
-        </div>
+        <router-link to="/upload">
+
+            <div class="nav__iconBox nav__iconBox--1" @click="switchPopup">
+                <img class="nav__icon" src="../assets/img/upload.svg" alt="">
+            </div>
+
+        </router-link>
         <div class="nav__iconBox">
             <img class="nav__icon" src="../assets/img/settings.svg" alt="">
         </div>

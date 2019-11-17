@@ -1,33 +1,44 @@
 <template>
   <div>
-    <div class="click" style="cursor:pointer" @click="getPostsList">
-      <h1>CLICK ME</h1>
-    </div>
-    <div class="viewerGrid">
-
-      <TheViewerPost v-for="(single, index) in allPosts" :key="single.name" :url="single.url"
-        @click.native="currentIndex = index; showPopup = !showPopup" />
-    </div>
+  
+    <TheViewerGrid 
+      :allPosts="allPosts"
+      @hasPicked="updateIndex"
+      @getPostsList="getPostsList"
+    />
 
     <transition name="fade">
-      <template v-if="showPopup">
-        <TheViewerPopup :currentPost="allPosts[currentIndex]" :currentIndex="currentIndexValidation"
-          @closePopup="showPopup  = !showPopup" @changeSlide="currentIndex += $event"
-          @delateCurentPost="delateCurentPost" />
-      </template>
+        <TheViewerPopup 
+        v-if="showPopup"
+        :currentPost="allPosts[currentIndex]" 
+        :currentIndex="currentIndexValidation"
+        @closePopup="showPopup  = !showPopup" 
+        @changeSlide="currentIndex += $event"
+        @delateCurentPost="delateCurentPost" />
     </transition>
+
+    <router-view>
+    <transition name="fade">
+      <TheViewerUpload 
+        v-if="isUploadPopupOn"
+        @switchPopup="$emit('closeUpload')" />
+    </transition>
+
+    </router-view>
+
 
   </div>
 </template>
 <script>
   import firebase from '../../myFireBase.js'
-  import TheViewerPost from './TheViewerPost'
+  import TheViewerGrid from './TheViewerGrid'
   import TheViewerPopup from './TheViewerPopup'
-  import {
-    error
-  } from 'util'
-
+  import TheViewerUpload from './TheViewerUpload'
+ 
   export default {
+    props:{
+      isUploadPopupOn: Boolean,
+    },
     data() {
       return {
         storageRef: Function,
@@ -49,38 +60,15 @@
         this.storageRef.child(`slide_viewer_imgs/${postToDelete}`).delete().then().catch(error => console.log(error))
       
         //3. Delete from current view and change for next
-
         this.showPopup = false;
         this.allPosts.splice(this.currentIndex, 1)
 
         if(this.allPosts.length >0){
-
           if(this.currentIndex != 0){
             this.currentIndex = this.currentIndex -1 
           }
           this.showPopup = true;
         }
-
-        // if(this.allPosts.length == 1){
-        //   this.showPopup = false;
-        //   this.allPosts.splice(this.currentIndex, 1)
-        // }
-        // else{
-        //   if(this.currentIndex == 0){
-       
-        //       this.showPopup = false;
-        //       this.allPosts.splice((this.currentIndex), 1)
-        //       this.showPopup = true;
- 
-        //   }
-        //   else{
-        //     this.currentIndex = this.currentIndex - 1;
-        //     this.allPosts.splice((this.currentIndex+1), 1)
-        //   }
-        // }
-        
-        //3.1 Close popup if last in array
-        //4. checkForUpdates() and refresh grid 
 
 
       },
@@ -112,7 +100,6 @@
       },
       checkForUpdates() {
         // Check for new posts
-     
         let newPosts = this.incomingPosts.filter(incomingPost => !this.allPostsNameList.includes(incomingPost))
         this.getImage(newPosts)
 
@@ -124,7 +111,6 @@
 
       },
       getPostsList() {
-
         firebase.database().ref('/posts/').once('value').then((snapshot) => {
           const postsListFromDB = Object.keys(snapshot.val())
           postsListFromDB.forEach(single => this.incomingPosts.push(single))
@@ -132,8 +118,13 @@
         }, (error) => console.log(error))
 
       },
+      updateIndex(index){
+        this.currentIndex = index;
+        this.showPopup = true;
+      }
 
     },
+
     computed: {
       currentIndexValidation() {
         if (this.currentIndex == 0) {
@@ -145,12 +136,16 @@
         }
       }
     },
+
     created() {
       this.storageRef = firebase.storage().ref();
     },
+
     components: {
-      TheViewerPost,
+      TheViewerUpload,
       TheViewerPopup,
+      TheViewerGrid,
+      
     }
   }
 

@@ -1,21 +1,25 @@
 <template>
   <div id="app">
-    <TheNavbar @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
 
-    <transition name="fade">
-      <TheUploadPopup 
-      v-if="isUploadPopupOn"
-      @switchPopup="isUploadPopupOn = !isUploadPopupOn" />
-    </transition>
-  <keep-alive>
-    <TheViewer/>
-  </keep-alive>
+  <TheNavbar 
+    @switchPopup="isUploadPopupOn = !isUploadPopupOn" 
+  />
+
+  <router-view>
+    <keep-alive>
+      <TheViewer 
+        :isUploadPopupOn="isUploadPopupOn"
+        @closeUpload="isUploadPopupOn = false"
+      />
+    </keep-alive>
+  </router-view>
+
+
   </div>
 </template>
 
 <script>
   import TheNavbar from './components/TheNavbar';
-  import TheUploadPopup from './components/TheUploadPopup';
   import TheViewer from './components/Viewer/TheViewer'
 
   export default {
@@ -27,7 +31,6 @@
     },
     components: {
       TheNavbar,
-      TheUploadPopup,
       TheViewer
     }
   }

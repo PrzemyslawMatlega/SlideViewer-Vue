@@ -2,9 +2,9 @@
   <div class="uploadPopup">
     <div class="uploadPopup__wrapper">
 
-      <div class="uploadPopup__close" @click="$emit('switchPopup')">
-        <img src="../assets/img/close.svg" alt="">
-      </div>
+      <router-link to="/" class="uploadPopup__close" tag="div" @click="$emit('switchPopup')">
+        <img src="../../assets/img/close.svg" alt="">
+      </router-link>
 
       <form class="uploadForm" enctype="multipart/form-data">
         <div class="uploadForm__fileName">
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import firebase from '../myFireBase.js'
+  import firebase from '../../myFireBase.js'
 
   export default {
     data() {
