@@ -21,6 +21,7 @@
 <script>
   import TheNavbar from './components/TheNavbar';
   import TheViewer from './components/Viewer/TheViewer'
+  import Login from './components/Login'
 
   export default {
     name: 'app',
@@ -31,7 +32,8 @@
     },
     components: {
       TheNavbar,
-      TheViewer
+      TheViewer,
+      Login
     }
   }
 

@@ -9,9 +9,9 @@
             </div>
 
         </router-link>
-        <div class="nav__iconBox">
+        <!-- <div class="nav__iconBox">
             <img class="nav__icon" src="../assets/img/settings.svg" alt="">
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -27,7 +27,7 @@ export default {
 <style lang="scss">
     .nav{
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         position: relative;
         height: 100px;
@@ -36,14 +36,11 @@ export default {
         padding: 0 3rem;
         
         &__logo{
-            position: absolute;
-            top:50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
+        
             letter-spacing: 3px;
             font-size: 30px;
             text-transform: uppercase;
-            color: antiquewhite;
+            color: rgb(255, 255, 255);
         }
         
         &__menulink{

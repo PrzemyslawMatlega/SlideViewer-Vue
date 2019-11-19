@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import 'firebase/storage';
 import 'firebase/database'
+import 'firebase/auth';
 const firebaseConfig = {
   apiKey: "AIzaSyAPvp4rEc4yXaREE_RJ_V5ZK-JhalLelLU",
   authDomain: "slideviewer-fd03d.firebaseapp.com",
