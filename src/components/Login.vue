@@ -67,7 +67,7 @@
       loginMe(){
       firebase.auth().signInWithEmailAndPassword(this.login, this.password)
           .then(user => {
-            console.log(user)
+            this.$router.push('/')
 
           }, error => {
             console.log(error)

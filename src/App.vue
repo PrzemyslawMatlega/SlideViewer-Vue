@@ -1,23 +1,21 @@
 <template>
   <div id="app">
 
-  <TheNavbar 
-    @switchPopup="isUploadPopupOn = !isUploadPopupOn" 
-  />
+    <TheNavbar 
+      @switchPopup="isUploadPopupOn = !isUploadPopupOn" 
+    />
 
-  <router-view>
     <keep-alive>
-      <TheViewer 
+      <router-view   
         :isUploadPopupOn="isUploadPopupOn"
-        @closeUpload="isUploadPopupOn = false"
-      />
+        @closeUpload="isUploadPopupOn = false">
+      
+      </router-view>
     </keep-alive>
-  </router-view>
 
 
   </div>
 </template>
-
 <script>
   import TheNavbar from './components/TheNavbar';
   import TheViewer from './components/Viewer/TheViewer'
@@ -36,7 +34,6 @@
       Login
     }
   }
-
 </script>
 
 <style lang="scss">
@@ -69,5 +66,4 @@
   .fade-leave-to {
     opacity: 0;
   }
-
 </style>
