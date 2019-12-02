@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import TheViewer from './components/Viewer/TheViewer'
+import Navigation from './components/TheNavbar'
 import TheViewerUpload from './components/Viewer/TheViewerUpload'
 import TheViewerPopup from './components/Viewer/TheViewerPopup'
 import Login from './components/Login';
@@ -10,11 +11,14 @@ Vue.use(VueRouter);
 
 let routes = [{
     path: '/',
-    component: TheViewer,
-    meta: {
-      requiresAuth: true
+    components:{
+      main: TheViewer,
+      nav: Navigation
     },
-
+    meta: {
+      requiresAuth: true,
+      navigation: true,
+    },
     children: [{
         path: '/upload',
         component: TheViewerUpload,
@@ -26,9 +30,13 @@ let routes = [{
   },
   {
     path: '/login',
-    component: Login,
+    components:{
+      main: Login,
+      nav: Navigation
+    },
     meta: {
-      requiresGuest: true
+      requiresGuest: true,
+      navigation: false,
     }
   }
 ]

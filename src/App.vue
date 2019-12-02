@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-
-    <TheNavbar 
-      @switchPopup="isUploadPopupOn = !isUploadPopupOn" 
-    />
+    
+    <router-view
+     name="nav"
+     @switchPopup="isUploadPopupOn = !isUploadPopupOn" 
+     />
 
     <keep-alive>
-      <router-view   
+      <router-view
+        name="main"   
         :isUploadPopupOn="isUploadPopupOn"
         @closeUpload="isUploadPopupOn = false">
       
@@ -23,11 +25,15 @@
 
   export default {
     name: 'app',
+    props:{
+        navigation: Boolean
+    },
     data() {
       return {
         isUploadPopupOn: false,
       }
     },
+
     components: {
       TheNavbar,
       TheViewer,

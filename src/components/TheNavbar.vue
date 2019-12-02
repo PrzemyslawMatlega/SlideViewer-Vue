@@ -2,8 +2,7 @@
     <div class="nav">
         <div class="nav__logo">SlideViewer</div>
 
-        <router-link to="/upload">
-
+        <router-link to="/upload" v-if="isUploadOn">
             <div class="nav__iconBox nav__iconBox--1" @click="switchPopup">
                 <img class="nav__icon" src="../assets/img/upload.svg" alt="">
             </div>
@@ -16,11 +15,17 @@
 </template>
 <script>
 export default {
+    data() {
+        return {
+            isUploadOn: this.$route.meta.navigation
+        }
+    },
     methods:{
         switchPopup(){
             this.$emit('switchPopup')
-        }
+        },
     }
+    
 }
 </script>
 
