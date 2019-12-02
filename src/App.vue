@@ -3,6 +3,8 @@
     
     <router-view
      name="nav"
+     :key="navKey"
+     @logut="navKey = navKey++"
      @switchPopup="isUploadPopupOn = !isUploadPopupOn" 
      />
 
@@ -31,6 +33,7 @@
     data() {
       return {
         isUploadPopupOn: false,
+        navKey: 0,
       }
     },
 

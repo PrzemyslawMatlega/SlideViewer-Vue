@@ -23,7 +23,8 @@ let routes = [{
         path: '/upload',
         component: TheViewerUpload,
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          navigation: true,
         },
       },
     ]
