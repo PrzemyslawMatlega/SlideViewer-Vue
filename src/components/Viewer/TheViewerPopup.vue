@@ -1,6 +1,6 @@
 <template>
   <div class="viewerPopup">
-    <div>
+    <div class="arrow-box">
       <div v-show="!(currentIndex =='First')" class="viewerPopup__arrow viewerPopup__arrow--left"
         @click="$emit('changeSlide', -1)">
         &lsaquo;</div>
@@ -17,6 +17,11 @@
             <div class="content__close" @click="$emit('closePopup')">
               <img src="../../assets/img/close.svg" alt="">
             </div>
+            <div class="content__info">
+              <span class="content__author">Author</span>
+              <span class="content__email">{{currentPost.author}}</span>
+            </div>
+
             <div class="content__removeBtn" @click="$emit('delateCurentPost')">
               <h4>delate this post</h4>
             </div>
@@ -24,7 +29,8 @@
       </div>
 
     </transition>
-    <div>
+
+    <div class="arrow-box">
       <div v-show="!(currentIndex =='Last')" class="viewerPopup__arrow viewerPopup__arrow--right"
         @click="$emit('changeSlide', 1)">
         &rsaquo;
@@ -59,19 +65,42 @@
     height: 100%;
     font-size: 1.6rem;
 
+    .arrow-box{
+      min-width: 140px;
+    }
+
     &__wrapper {
       display: flex;
-      width: 110rem;
-      height: 80rem;
+      width: 95rem;
+      height: 65rem;
       padding: 1rem;
 
       .content {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         width: 40%;
         padding: 1rem;
         background: #fff;
+
+        &__email{
+          display: block;
+          width: 100%;
+          text-align: center;
+          letter-spacing: 0.2rem;
+          font-size: 2rem;
+          text-transform: uppercase;
+          margin: 0.5rem 0 2rem;
+        }
+        &__author{
+          display: block;
+          width: 100%;
+          text-align: center;
+          letter-spacing: 0.8rem;
+          font-size: 1.6rem;
+          margin-top: 1rem;
+          text-transform: uppercase;
+        }
 
         &__close {
           align-self: flex-end;

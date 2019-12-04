@@ -52,7 +52,7 @@
         fileStatus: '',
         fileStatusClass: '',
         submitInactive: false,
-
+      
       }
     },
     methods: {
@@ -61,9 +61,10 @@
         this.fileToUpload = event.target.files[0]
       },
       uploadList(uniqueId) {
+          
           firebase.database().ref(`posts/${uniqueId}`).set({
               imgName: uniqueId,
-              author: 'xyz',
+              author: `${firebase.auth().currentUser.email}`
           }, (error) => console.log(error));
       },
       uploadPickedFile() {

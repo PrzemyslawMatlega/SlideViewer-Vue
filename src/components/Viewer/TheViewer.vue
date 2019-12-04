@@ -43,7 +43,6 @@
       return {
         storageRef: Function,
         showPopup: false,
-        incomingPosts: [],
         allPosts: [],
         currentIndex: 0,
         allPostsNameList: [],
@@ -74,11 +73,12 @@
       },
       getImage(newPosts) {
         newPosts.forEach(singlePost => {
-          this.allPostsNameList.push(singlePost);
 
-          const listRef = this.storageRef.child('slide_viewer_imgs/' + singlePost);
+          this.allPostsNameList.push(singlePost.imgName);
+          const listRef = this.storageRef.child('slide_viewer_imgs/' + singlePost.imgName);
+          
           listRef.getDownloadURL().then(url => this.allPosts.push({
-              name: singlePost,
+              ...singlePost,
               url: url,
             }))
             .catch(error => {
@@ -98,13 +98,13 @@
             });
         })
       },
-      checkForUpdates() {
+      checkForUpdates(incomingPosts) {
         // Check for new posts
-        let newPosts = this.incomingPosts.filter(incomingPost => !this.allPostsNameList.includes(incomingPost))
+        let newPosts = incomingPosts.filter( incomingPost => !this.allPostsNameList.includes(incomingPost.imgName))
         this.getImage(newPosts)
 
         // Check for delated posts 
-        let delatedPosts = this.allPosts.filter(delatedPost => !this.incomingPosts.includes(delatedPost))
+        let delatedPosts = this.allPosts.filter(delatedPost => !incomingPosts.includes(delatedPost))
         //to do    
 
         this.incomingPosts = []
@@ -112,9 +112,14 @@
       },
       getPostsList() {
         firebase.database().ref('/posts/').once('value').then((snapshot) => {
-          const postsListFromDB = Object.keys(snapshot.val())
-          postsListFromDB.forEach(single => this.incomingPosts.push(single))
-          this.checkForUpdates();
+          const postsFromDB = snapshot.val();
+          const incomingPosts = [];
+
+          for (const item in postsFromDB){
+              incomingPosts.push(postsFromDB[item])
+          }
+
+          this.checkForUpdates(incomingPosts);
         }, (error) => console.log(error))
 
       },
