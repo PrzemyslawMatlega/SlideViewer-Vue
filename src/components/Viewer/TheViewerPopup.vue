@@ -8,23 +8,34 @@
 
     <transition name="fade" mode="out-in">
 
-      <div class="viewerPopup__wrapper" 
-        :key="currentPost.name">
-          <div class="viewerPopup__img">
-            <img :src="currentPost.url" alt="">
-          </div>
-          <div class="content">
-            <div class="content__close" @click="$emit('closePopup')">
-              <img src="../../assets/img/close.svg" alt="">
-            </div>
-            <div class="content__info">
-              <span class="content__author">Author</span>
-              <span class="content__email">{{currentPost.author}}</span>
-            </div>
+      <div class="viewerPopup__wrapper" :key="currentPost.name">
+        <div class="viewerPopup__img">
+          <img :src="currentPost.url" alt="">
+        </div>
 
-            <div class="content__removeBtn" @click="$emit('delateCurentPost')">
-              <h4>delate this post</h4>
+        <div class="content">
+          <div class="content__close" @click="$emit('closePopup')">
+            <img src="../../assets/img/close.svg" alt="">
+          </div>
+          <div class="content__info">
+            <span class="content__author">Author</span>
+            <span class="content__email">{{currentPost.author}}</span>
+          </div>
+          <div class="content__removeBtn" @click="$emit('delateCurentPost')">
+            <p>delate this post</p>
+          </div>
+
+          <div class="comments">
+            <div class="comments__box">
+
             </div>
+          
+              <textarea cols="30" rows="4" class="comments__input"></textarea>
+              <div class="comments__send">Add posts </div>
+
+         
+          </div>
+
         </div>
       </div>
 
@@ -65,7 +76,7 @@
     height: 100%;
     font-size: 1.6rem;
 
-    .arrow-box{
+    .arrow-box {
       min-width: 140px;
     }
 
@@ -83,7 +94,7 @@
         padding: 1rem;
         background: #fff;
 
-        &__email{
+        &__email {
           display: block;
           width: 100%;
           text-align: center;
@@ -92,7 +103,8 @@
           text-transform: uppercase;
           margin: 0.5rem 0 2rem;
         }
-        &__author{
+
+        &__author {
           display: block;
           width: 100%;
           text-align: center;
@@ -115,13 +127,48 @@
           }
         }
 
-        &__removeBtn{
+        &__removeBtn {
           text-align: center;
-          border: 1px solid black ;
+          border: 1px solid black;
           cursor: pointer;
           background: #f1f1f1;
         }
       }
+
+      .comments {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        &__box{
+          flex-grow: 1;
+          border: 1px solid #cecece;
+          margin: 1rem 0;
+        }
+        &__input{
+          width: 100%;
+          border: 1px solid #8a8787;
+          resize: none;
+          font-family: Roboto;
+          font-size: 16px;
+          letter-spacing: 1px;
+          line-height: 20px;
+        }
+        &__send{
+          align-self: flex-end;
+          margin: 1.5rem 0;
+          width: 15rem;
+          text-transform: uppercase;
+          text-align: center;
+          padding: 0.4rem;
+          border: 2px solid rgb(11, 122, 26);
+          cursor: pointer;
+        }
+
+      }
+
+
 
       img {
         width: 100%;
