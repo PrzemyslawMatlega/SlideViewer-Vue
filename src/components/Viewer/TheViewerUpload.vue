@@ -64,7 +64,8 @@
           
           firebase.database().ref(`posts/${uniqueId}`).set({
               imgName: uniqueId,
-              author: `${firebase.auth().currentUser.email}`
+              author: `${firebase.auth().currentUser.email}`,
+              createdAt: firebase.database.ServerValue.TIMESTAMP
           }, (error) => console.log(error));
       },
       uploadPickedFile() {

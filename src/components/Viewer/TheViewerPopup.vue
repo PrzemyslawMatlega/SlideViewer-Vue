@@ -27,11 +27,23 @@
 
           <div class="comments">
             <div class="comments__box">
-
+              <transition-group name="list" tag="p">
+                <div class="comments__single"
+                  v-for="(singleComment, index) in chatArray"
+                  :key="`${singleComment.content}${index}`"
+                >
+                  author: {{singleComment.author}} <br>
+                  text: {{singleComment.content}}
+                </div>
+              </transition-group>
             </div>
           
-              <textarea cols="30" rows="4" class="comments__input"></textarea>
-              <div class="comments__send">Add posts </div>
+              <textarea cols="30" rows="4" class="comments__input"
+                 v-model="message.content"></textarea>
+              <div class="comments__send"
+                @click="sendComment">
+                Add posts 
+              </div>
 
          
           </div>
@@ -52,16 +64,63 @@
 </template>
 
 <script>
+  import firebase from '../../myFireBase.js'
+
   export default {
     props: {
       currentPost: Object,
       currentIndex: String,
     },
+    data() {
+      return {
+        dbChatRef: firebase.database().ref(`chat/${this.currentPost.imgName}`), 
+        message: {
+          content: '',
+          author: `${firebase.auth().currentUser.email}`,
+          // startedAt: firebase.database.ServerValue.TIMESTAMP
+        },
+        chatArray: [],
+
+      }
+    },
+    methods: {
+      sendComment() {
+        this.dbChatRef.push().set(this.message)
+      }
+    },
+    created(){
+      // this.dbChatRef.orderByChild('startedAt').once('value').then( snapshot => console.log('snap', snapshot.val()));
+        this.dbChatRef.orderByChild('startedAt').on('value', data  =>  {
+              let allPosts = data.val()
+              const newMessages = [];
+
+              for(let  single in allPosts){
+                newMessages.push(allPosts[single])
+              }
+              this.chatArray = newMessages
+              
+
+        })
+
+    }
   }
 
 </script>
 
 <style lang="scss">
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+
   .viewerPopup {
     display: grid;
     grid-template-columns: 1fr auto 1fr;

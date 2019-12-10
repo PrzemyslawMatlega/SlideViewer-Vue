@@ -72,6 +72,7 @@
 
       },
       getImage(newPosts) {
+    
         newPosts.forEach(singlePost => {
 
           this.allPostsNameList.push(singlePost.imgName);
@@ -97,6 +98,7 @@
               }
             });
         })
+
       },
       checkForUpdates(incomingPosts) {
         // Check for new posts
