@@ -3,8 +3,8 @@
     <div class="viewerGrid">
       <TheViewerGridPost
         v-for="(single, index) in allPosts"
-        :key="single.name"
-        :id="single.name"
+        :key="single.imgName"
+        :id="single.imgName"
         :url="single.url"
         @click.native="$emit('hasPicked', index)"
       />
