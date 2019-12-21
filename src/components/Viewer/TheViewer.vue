@@ -173,7 +173,9 @@ export default {
   created() {
     this.storageRef = firebase.storage().ref();
   },
-  mounted() {},
+  mounted() {
+    this.getPostsList() 
+  },
 
   components: {
     TheViewerUpload,
@@ -190,8 +192,8 @@ export default {
   width: 70%;
   margin: 5rem auto;
   display: grid;
-  grid-template-columns: repeat(3, 30rem);
-  grid-auto-rows: 30rem;
+  grid-template-columns: repeat(4, 25rem);
+  grid-auto-rows: 25rem;
   grid-column-gap: 4rem;
   grid-row-gap: 4rem;
 }
