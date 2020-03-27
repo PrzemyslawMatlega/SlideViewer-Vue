@@ -2,7 +2,7 @@
   <div class="uploadPopup">
     <div class="uploadPopup__wrapper">
 
-      <router-link to="/" class="uploadPopup__close" tag="div" @click="$emit('switchPopup')">
+      <router-link to="/" class="uploadPopup__close" tag="div" >
         <img src="../../assets/img/close.svg" alt="">
       </router-link>
 
@@ -69,7 +69,7 @@
           }, (error) => console.log(error));
       },
       uploadPickedFile() {
-
+      
         if (this.fileToUpload) {
 
           let uniqueId = '_' + Math.random().toString(36).substr(2, 9);
@@ -90,6 +90,7 @@
             function complete() {
               vm.fileStatus = 'uploaded'
               vm.uploadList(uniqueId)
+              vm.$emit('updategrid')
             }
           )
 
@@ -136,6 +137,7 @@
     background: rgba(0, 0, 0, 0.698);
     width: 100%;
     height: 100%;
+    min-height: 100vh;
     font-size: 1.6rem;
 
     &__wrapper {

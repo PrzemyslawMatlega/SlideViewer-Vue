@@ -50,7 +50,7 @@ export default {
   position: relative;
   height: 100px;
   width: 100%;
-  // background: #54a534;
+  background: #54a534;
   border-bottom: 0px solid rgb(245, 234, 234);
   padding: 0 3rem;
 
@@ -60,7 +60,7 @@ export default {
     // font-style:italic;
 
     text-transform: uppercase;
-    color: rgb(0, 0, 0);
+    color: #ffffff;
   }
 
   &__menulink {

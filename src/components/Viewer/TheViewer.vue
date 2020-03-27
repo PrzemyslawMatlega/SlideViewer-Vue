@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="click" style="cursor:pointer" @click="getPostsList">
-      <h1>CLICK ME</h1>
-    </div>
     <transition name="fade">
       <div class="gridLoader" v-if="gridLoad">
         <GridLoader></GridLoader>
@@ -24,12 +21,16 @@
         @closePopup="showPopup  = !showPopup"
         @changeSlide="currentIndex += $event"
         @delateCurentPost="delateCurentPost"
+  
       />
     </transition>
 
-    <router-view>
+    <router-view @updategrid="getPostsList" >
       <transition name="fade">
-        <TheViewerUpload v-if="isUploadPopupOn" @switchPopup="$emit('closeUpload')" />
+        <TheViewerUpload 
+          v-if="isUploadPopupOn" 
+          @switchPopup="$emit('closeUpload')"
+        />
       </transition>
     </router-view>
   </div>
@@ -56,9 +57,12 @@ export default {
     };
   },
   methods: {
+    check(){
+        console.log('fsdfds')
+    },
     delateCurentPost() {
       //1. Delate post from list on database
-      const postToDelete = this.allPosts[this.currentIndex].name;
+      const postToDelete = this.allPosts[this.currentIndex].imgName;
       firebase
         .database()
         .ref(`/posts/${postToDelete}`)
@@ -134,6 +138,7 @@ export default {
       this.incomingPosts = [];
     },
     getPostsList() {
+      console.log('elo')
       firebase
         .database()
         .ref("/posts/")
